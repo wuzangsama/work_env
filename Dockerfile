@@ -1,4 +1,5 @@
 FROM centos
+ENV GOPATH=$HOME/go
 RUN yum update -y \
     && yum -y groupinstall "Development Tools" \
     && yum install -y zsh \
@@ -6,6 +7,7 @@ RUN yum update -y \
     && sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)" \
     && chsh -s /bin/zsh \
     && yum install -y clang \
+    && yum install -y golang \
     && yum install -y cscope \
     && yum install -y cmake \
     && yum install -y python \
@@ -57,6 +59,7 @@ RUN yum update -y \
     && cp -f .zshrc ~/ \
     && cp -f .tmux.conf ~/ \
     && vim -c "PlugInstall" -c "q" -c "q" \
+    && vim -c "GoInstallBinaries" -c "q" -c "q" \
     && cd ~/.vim/bundle/ultisnips/ \
     && mkdir mysnippets \
     && cp -rf /usr/local/src/vim_ide/mysnippets/* ~/.vim/bundle/ultisnips/mysnippets \
