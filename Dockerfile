@@ -59,7 +59,6 @@ RUN yum update -y \
     && cp -f .zshrc ~/ \
     && cp -f .tmux.conf ~/ \
     && vim -c "PlugInstall" -c "q" -c "q" \
-    && vim -c "GoInstallBinaries" -c "q" -c "q" \
     && cd ~/.vim/bundle/ultisnips/ \
     && mkdir mysnippets \
     && cp -rf /usr/local/src/vim_ide/mysnippets/* ~/.vim/bundle/ultisnips/mysnippets \
