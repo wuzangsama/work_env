@@ -19,8 +19,6 @@ RUN yum update -y \
     && yum install -y cmake \
     && yum install -y python \
     && yum install -y python-devel \
-    && yum install -y python34 \
-    && yum install -y python34-devel \
     && yum install -y ruby \
     && yum install -y ruby-devel \
     && yum install -y lua \
@@ -35,6 +33,8 @@ RUN yum update -y \
     && yum install -y epel-release.noarch \
     && yum install -y the_silver_searcher \
     && yum install -y tmux \
+    && yum install -y python34 \
+    && yum install -y python34-devel \
 # 安装go
     && yum install -y wget \
     && goRelArch='linux-amd64' \
