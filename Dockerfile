@@ -19,6 +19,8 @@ RUN yum update -y \
     && yum install -y cmake \
     && yum install -y python \
     && yum install -y python-devel \
+    && yum install -y python34 \
+    && yum install -y python34-devel \
     && yum install -y ruby \
     && yum install -y ruby-devel \
     && yum install -y lua \
@@ -50,8 +52,11 @@ RUN yum update -y \
         --enable-multibyte \
         --enable-cscope=yes \
         --enable-luainterp=yes \
+        --enable-rubyinterp=yes \
         --enable-pythoninterp=yes \
         --with-python-config-dir=/usr/lib64/python2.7/config/ \
+        --with-python3-config-dir=/usr/lib64/python3.4/config-3.4m \
+        --enable-python3interp=yes \
         --enable-tclinterp=yes \
         --enable-gui=auto \
     && make \
