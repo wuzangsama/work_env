@@ -103,3 +103,4 @@ WORKDIR /src
 
 #volume
 VOLUME /src
+VOLUME /go
