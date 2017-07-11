@@ -1,13 +1,22 @@
 FROM centos
 
+MAINTAINER Haifeng Zhang "zhanghf@zailingtech.com"
+
 # 设置go相关环境变量
 ENV GOLANG_VERSION 1.8.3
 ENV GOPATH /go
 ENV PATH $GOPATH/bin:/usr/local/go/bin:$PATH
+# 设置locale，进入终端可以输入中文
+ENV LANG en_US.utf8
+# 设置容器时区
+ENV TZ "Asia/Shanghai"
 
 RUN yum update -y \
-# 安装开发工具包
+# 安装开发工具包和man
     && yum -y groupinstall "Development Tools" \
+    && yum -y install gitflow \
+    && yum -y install git-svn \
+    && yum -y install man \
 # 安装zsh和oh-my-zsh
     && yum install -y zsh \
     && yum install -y which \
@@ -28,8 +37,6 @@ RUN yum update -y \
     && yum install -y tcl-devel \
     && yum install -y ncurses \
     && yum install -y ncurses-devel \
-    && yum install -y pcre-devel \
-    && yum install -y xz-devel \
     && yum install -y epel-release.noarch \
     && yum install -y the_silver_searcher \
     && yum install -y tmux \
@@ -93,3 +100,6 @@ RUN yum update -y \
 
 #work dir
 WORKDIR /src
+
+#volume
+VOLUME /src
