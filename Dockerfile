@@ -13,6 +13,7 @@ ENV TZ "Asia/Shanghai"
 
 RUN yum update -y \
 # 安装开发工具包和man
+    && yum install -y epel-release.noarch \
     && yum -y groupinstall "Development Tools" \
     && yum -y install gitflow \
     && yum -y install git-svn \
@@ -37,7 +38,6 @@ RUN yum update -y \
     && yum install -y tcl-devel \
     && yum install -y ncurses \
     && yum install -y ncurses-devel \
-    && yum install -y epel-release.noarch \
     && yum install -y the_silver_searcher \
     && yum install -y tmux \
     && yum install -y python34 \
@@ -99,8 +99,8 @@ RUN yum update -y \
     && yum clean all
 
 #work dir
-WORKDIR /src
+WORKDIR /home
 
 #volume
-VOLUME /src
+VOLUME /home
 VOLUME /go
