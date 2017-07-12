@@ -99,8 +99,5 @@ RUN yum update -y \
     && yum clean all
 
 #work dir
-WORKDIR /home
+WORKDIR /work
 
-#volume
-VOLUME /home
-VOLUME /go
