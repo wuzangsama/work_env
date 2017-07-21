@@ -85,11 +85,12 @@ RUN yum update -y \
 # 下载安装我自己的工作环境配置
     && git clone https://github.com/wuzangsama/vim_ide.git \
     && cd ./vim_ide \
-    && git checkout with_vim_clang \
     && cp -f .vimrc ~/ \
     && cp -f .zshrc ~/ \
     && cp -f .tmux.conf ~/ \
 # vim其他插件安装
+    && export CC=/usr/bin/clang
+    && export CXX=/usr/bin/clang++
     && vim -c "PlugInstall" -c "q" -c "q" \
     && cd ~/.vim/bundle/ultisnips/ \
     && mkdir mysnippets \
