@@ -89,8 +89,8 @@ RUN yum update -y \
     && cp -f .zshrc ~/ \
     && cp -f .tmux.conf ~/ \
 # vim其他插件安装
-    && export CC=/usr/bin/clang
-    && export CXX=/usr/bin/clang++
+    && export CC=/usr/bin/clang \
+    && export CXX=/usr/bin/clang++ \
     && vim -c "PlugInstall" -c "q" -c "q" \
     && cd ~/.vim/bundle/ultisnips/ \
     && mkdir mysnippets \
