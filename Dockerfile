@@ -74,7 +74,7 @@ RUN yum update -y \
     && make -j$(nproc) \
     && make install \
     && cd .. \
-    && rm -rf *
+    && rm -rf * \
 # 安装go
     && goRelArch='linux-amd64' \
     && url="https://golang.org/dl/go${GOLANG_VERSION}.${goRelArch}.tar.gz" \
