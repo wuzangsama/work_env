@@ -24,9 +24,7 @@ RUN yum update -y \
     && sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)" \
     && chsh -s /bin/zsh \
 # 安装vim需要的工具包
-    && yum install -y clang \
     && yum install -y cscope \
-    && yum install -y cmake \
     && yum install -y python \
     && yum install -y python-devel \
     && yum install -y ruby \
@@ -42,8 +40,42 @@ RUN yum update -y \
     && yum install -y tmux \
     && yum install -y python34 \
     && yum install -y python34-devel \
-# 安装go
+# 安装Cmake
     && yum install -y wget \
+    && cd /usr/local/src \
+    && wget -O cmake.tgz https://cmake.org/files/v3.9/cmake-3.9.0.tar.gz \
+    && tar -C /usr/local/src -xzf cmake.tgz \
+    && cd cmake-3.9.0 \
+    && ./bootstrap \
+    && gmake -j$(nproc) \
+    && make install \
+    && cd .. \
+    && rm -rf cmake* \
+# 安装Clang
+    && wget http://releases.llvm.org/4.0.1/llvm-4.0.1.src.tar.xz \
+    && wget http://releases.llvm.org/4.0.1/cfe-4.0.1.src.tar.xz \
+    && wget http://releases.llvm.org/4.0.1/compiler-rt-4.0.1.src.tar.xz \
+    && wget http://releases.llvm.org/4.0.1/clang-tools-extra-4.0.1.src.tar.xz \
+    && tar xf llvm-4.0.1.src.tar.xz \
+    && mv llvm-4.0.1.src llvm \
+    && cd llvm/tools \
+    && tar xf ../../cfe-4.0.1.src.tar.xz \
+    && mv cfe-4.0.1.src clang \
+    && cd clang/tools \
+    && tar xf ../../../../clang-tools-extra-4.0.1.src.tar.xz \
+    && mv clang-tools-extra-4.0.1.src extra \
+    && cd ../../../projects \
+    && tar xf ../../compiler-rt-4.0.1.src.tar.xz \
+    && mv compiler-rt-4.0.1.src compiler-rt \
+    && cd ../.. \
+    && mkdir llvm-build \
+    && cd llvm-build \
+    && cmake -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Release -DLLVM_OPTIMIZED_TABLEGEN=1 ../llvm \
+    && make -j$(nproc) \
+    && make install \
+    && cd .. \
+    && rm -rf *
+# 安装go
     && goRelArch='linux-amd64' \
     && url="https://golang.org/dl/go${GOLANG_VERSION}.${goRelArch}.tar.gz" \
     && wget -O go.tgz "$url" \
@@ -89,8 +121,8 @@ RUN yum update -y \
     && cp -f .zshrc ~/ \
     && cp -f .tmux.conf ~/ \
 # vim其他插件安装
-    && export CC=/usr/bin/clang \
-    && export CXX=/usr/bin/clang++ \
+    && export CC=/usr/local/bin/clang \
+    && export CXX=/usr/local/bin/clang++ \
     && vim -c "PlugInstall" -c "q" -c "q" \
     && cd ~/.vim/bundle/ultisnips/ \
     && mkdir mysnippets \
