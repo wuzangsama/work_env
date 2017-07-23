@@ -78,6 +78,7 @@ RUN yum update -y \
     # && cd .. \
     # && rm -rf * \
 # 安装go
+    && yum install -y wget \
     && goRelArch='linux-amd64' \
     && url="https://golang.org/dl/go${GOLANG_VERSION}.${goRelArch}.tar.gz" \
     && wget -O go.tgz "$url" \
