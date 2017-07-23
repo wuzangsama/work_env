@@ -24,7 +24,7 @@ RUN yum update -y \
     && sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)" \
     && chsh -s /bin/zsh \
 # 安装vim需要的工具包
-    && yum install -y cmake
+    && yum install -y cmake \
     && yum install -y clang \
     && yum install -y cscope \
     && yum install -y python \
