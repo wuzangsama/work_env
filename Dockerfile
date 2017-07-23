@@ -24,6 +24,7 @@ RUN yum update -y \
     && sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)" \
     && chsh -s /bin/zsh \
 # 安装vim需要的工具包
+    && yum install -y clang \
     && yum install -y cscope \
     && yum install -y python \
     && yum install -y python-devel \
@@ -52,29 +53,29 @@ RUN yum update -y \
     && cd .. \
     && rm -rf cmake* \
 # 安装Clang
-    && wget http://releases.llvm.org/4.0.1/llvm-4.0.1.src.tar.xz \
-    && wget http://releases.llvm.org/4.0.1/cfe-4.0.1.src.tar.xz \
-    && wget http://releases.llvm.org/4.0.1/compiler-rt-4.0.1.src.tar.xz \
-    && wget http://releases.llvm.org/4.0.1/clang-tools-extra-4.0.1.src.tar.xz \
-    && tar xf llvm-4.0.1.src.tar.xz \
-    && mv llvm-4.0.1.src llvm \
-    && cd llvm/tools \
-    && tar xf ../../cfe-4.0.1.src.tar.xz \
-    && mv cfe-4.0.1.src clang \
-    && cd clang/tools \
-    && tar xf ../../../../clang-tools-extra-4.0.1.src.tar.xz \
-    && mv clang-tools-extra-4.0.1.src extra \
-    && cd ../../../projects \
-    && tar xf ../../compiler-rt-4.0.1.src.tar.xz \
-    && mv compiler-rt-4.0.1.src compiler-rt \
-    && cd ../.. \
-    && mkdir llvm-build \
-    && cd llvm-build \
-    && cmake -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Release -DLLVM_OPTIMIZED_TABLEGEN=1 ../llvm \
-    && make -j$(nproc) \
-    && make install \
-    && cd .. \
-    && rm -rf * \
+    # && wget http://releases.llvm.org/4.0.1/llvm-4.0.1.src.tar.xz \
+    # && wget http://releases.llvm.org/4.0.1/cfe-4.0.1.src.tar.xz \
+    # && wget http://releases.llvm.org/4.0.1/compiler-rt-4.0.1.src.tar.xz \
+    # && wget http://releases.llvm.org/4.0.1/clang-tools-extra-4.0.1.src.tar.xz \
+    # && tar xf llvm-4.0.1.src.tar.xz \
+    # && mv llvm-4.0.1.src llvm \
+    # && cd llvm/tools \
+    # && tar xf ../../cfe-4.0.1.src.tar.xz \
+    # && mv cfe-4.0.1.src clang \
+    # && cd clang/tools \
+    # && tar xf ../../../../clang-tools-extra-4.0.1.src.tar.xz \
+    # && mv clang-tools-extra-4.0.1.src extra \
+    # && cd ../../../projects \
+    # && tar xf ../../compiler-rt-4.0.1.src.tar.xz \
+    # && mv compiler-rt-4.0.1.src compiler-rt \
+    # && cd ../.. \
+    # && mkdir llvm-build \
+    # && cd llvm-build \
+    # && cmake -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Release -DLLVM_OPTIMIZED_TABLEGEN=1 ../llvm \
+    # && make -j$(nproc) \
+    # && make install \
+    # && cd .. \
+    # && rm -rf * \
 # 安装go
     && goRelArch='linux-amd64' \
     && url="https://golang.org/dl/go${GOLANG_VERSION}.${goRelArch}.tar.gz" \
@@ -111,7 +112,7 @@ RUN yum update -y \
 # 安装vim初次启动需要的插件
     && curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
         https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim \
-    && git clone https://github.com/morhetz/gruvbox.git ~/.vim/bundle/gruvbox \
+    && git clone https://github.com/tomasr/molokai.git ~/.vim/bundle/molokai \
     && git clone https://github.com/Shougo/unite.vim.git ~/.vim/bundle/unite.vim \
     && git clone https://github.com/shougo/vimfiler.vim.git ~/.vim/bundle/vimfiler.vim \
 # 下载安装我自己的工作环境配置
@@ -121,8 +122,6 @@ RUN yum update -y \
     && cp -f .zshrc ~/ \
     && cp -f .tmux.conf ~/ \
 # vim其他插件安装
-    && export CC=/usr/local/bin/clang \
-    && export CXX=/usr/local/bin/clang++ \
     && vim -c "PlugInstall" -c "q" -c "q" \
     && cd ~/.vim/bundle/ultisnips/ \
     && mkdir mysnippets \
