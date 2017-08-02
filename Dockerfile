@@ -112,7 +112,7 @@ RUN yum update -y \
     # && rm -rf vim/ \
 # 安装nvim
     && yum install -y python-pip \
-    && pip install --upgrade pip
+    && pip install --upgrade pip \
     && pip2 install --upgrade neovim \
     && cd /usr/local/src \
     && curl -O https://bootstrap.pypa.io/get-pip.py \
