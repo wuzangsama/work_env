@@ -111,11 +111,18 @@ RUN yum update -y \
     # && cd .. \
     # && rm -rf vim/ \
 # 安装nvim
+    && yum install -y python-pip \
+    && pip install --upgrade pip
+    && pip2 install --upgrade neovim \
     && cd /usr/local/src \
+    && curl -O https://bootstrap.pypa.io/get-pip.py \
+    && python3.4 get-pip.py \
+    && rm -f get-pip.py \
+    && pip3 install --upgrade neovim \
     && git clone https://github.com/neovim/neovim.git \
     && cd neovim \
     && git checkout v0.2.0 \
-    && make \
+    && make CMAKE_BUILD_TYPE=Release \
     && make install \
     && cd .. \
     && rm -rf neovim \
@@ -146,7 +153,7 @@ RUN yum update -y \
     && cp -f .tmux.conf ~/ \
 # vim其他插件安装
     # && vim -c "PlugInstall" -c "q" -c "q" \
-    && nvim +PlugInstall +qall \
+    && nvim +PlugInstall +UpdateRemotePlugins +qall \
     # && cd ~/.vim/bundle/ultisnips/ \
     && cd ~/.config/nvim/bundle/ultisnips/ \
     && mkdir mysnippets \
