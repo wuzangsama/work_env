@@ -145,7 +145,8 @@ RUN yum update -y \
     && cp -f .zshrc ~/ \
     && cp -f .tmux.conf ~/ \
 # vim其他插件安装
-    && vim -c "PlugInstall" -c "q" -c "q" \
+    # && vim -c "PlugInstall" -c "q" -c "q" \
+    && nvim +PlugInstall +qall \
     # && cd ~/.vim/bundle/ultisnips/ \
     && cd ~/.config/nvim/bundle/ultisnips/ \
     && mkdir mysnippets \
