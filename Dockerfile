@@ -147,17 +147,23 @@ RUN yum update -y \
 # 下载安装我自己的工作环境配置
     && git clone https://github.com/wuzangsama/vim_ide.git \
     && cd ./vim_ide \
+    # vim
     && cp -f .vimrc ~/ \
+    # nvim
     # && cp -f .vimrc ~/.config/nvim/init.vim \
     && cp -f .zshrc ~/ \
     && cp -f .tmux.conf ~/ \
 # vim其他插件安装
+    # vim
     && vim +PlugInstall +qall \
-    # && nvim +PlugInstall +UpdateRemotePlugins +qall \
     && cd ~/.vim/bundle/ultisnips/ \
+    # nvim
+    # && nvim +PlugInstall +UpdateRemotePlugins +qall \
     # && cd ~/.config/nvim/bundle/ultisnips/ \
     && mkdir mysnippets \
+    # vim
     && cp -rf /usr/local/src/vim_ide/mysnippets/* ~/.vim/bundle/ultisnips/mysnippets \
+    # nvim
     # && cp -rf /usr/local/src/vim_ide/mysnippets/* ~/.config/nvim/bundle/ultisnips/mysnippets \
     && rm -rf /usr/local/src/vim_ide/ \
 # 清理
