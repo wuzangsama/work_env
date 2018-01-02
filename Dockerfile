@@ -1,9 +1,9 @@
-FROM centos
+FROM centos:7.4
 
 MAINTAINER Haifeng Zhang "zhanghf@zailingtech.com"
 
 # 设置go相关环境变量
-ENV GOLANG_VERSION 1.8.3
+ENV GOLANG_VERSION 1.9.2
 ENV GOPATH /go
 ENV PATH $GOPATH/bin:/usr/local/go/bin:$PATH
 # 设置locale，进入终端可以输入中文
@@ -16,7 +16,7 @@ RUN yum update -y \
     && yum install -y epel-release.noarch \
     && yum -y groupinstall "Development Tools" \
     && yum -y install gitflow \
-    && yum -y install git-svn \
+    && yum -y install valgrind \
     && yum -y install man \
 # 安装zsh和oh-my-zsh
     && yum install -y zsh \
@@ -26,6 +26,7 @@ RUN yum update -y \
 # 安装vim需要的工具包
     && yum install -y cmake \
     && yum install -y clang \
+    && yum install -y openssl \
     && yum install -y cscope \
     && yum install -y python \
     && yum install -y python-devel \
@@ -47,53 +48,41 @@ RUN yum update -y \
     && yum install -y automake \
     && yum install -y pkgconfig \
     && yum install -y unzip \
-# 安装Cmake
-    # && yum install -y wget \
-    # && cd /usr/local/src \
-    # && wget -O cmake.tgz https://cmake.org/files/v3.9/cmake-3.9.0.tar.gz \
-    # && tar -C /usr/local/src -xzf cmake.tgz \
-    # && cd cmake-3.9.0 \
-    # && ./bootstrap \
-    # && gmake -j$(nproc) \
-    # && make install \
-    # && cd .. \
-    # && rm -rf cmake* \
-# 安装Clang
-    # && wget http://releases.llvm.org/4.0.1/llvm-4.0.1.src.tar.xz \
-    # && wget http://releases.llvm.org/4.0.1/cfe-4.0.1.src.tar.xz \
-    # && wget http://releases.llvm.org/4.0.1/compiler-rt-4.0.1.src.tar.xz \
-    # && wget http://releases.llvm.org/4.0.1/clang-tools-extra-4.0.1.src.tar.xz \
-    # && tar xf llvm-4.0.1.src.tar.xz \
-    # && mv llvm-4.0.1.src llvm \
-    # && cd llvm/tools \
-    # && tar xf ../../cfe-4.0.1.src.tar.xz \
-    # && mv cfe-4.0.1.src clang \
-    # && cd clang/tools \
-    # && tar xf ../../../../clang-tools-extra-4.0.1.src.tar.xz \
-    # && mv clang-tools-extra-4.0.1.src extra \
-    # && cd ../../../projects \
-    # && tar xf ../../compiler-rt-4.0.1.src.tar.xz \
-    # && mv compiler-rt-4.0.1.src compiler-rt \
-    # && cd ../.. \
-    # && mkdir llvm-build \
-    # && cd llvm-build \
-    # && cmake -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Release -DLLVM_OPTIMIZED_TABLEGEN=1 ../llvm \
-    # && make -j$(nproc) \
-    # && make install \
-    # && cd .. \
-    # && rm -rf * \
-# 安装go
     && yum install -y wget \
+    && yum clean all \
+# 安装go
     && goRelArch='linux-amd64' \
     && url="https://golang.org/dl/go${GOLANG_VERSION}.${goRelArch}.tar.gz" \
     && wget -O go.tgz "$url" \
     && tar -C /usr/local -xzf go.tgz \
     && rm go.tgz \
     && go version \
+    && go get github.com/klauspost/asmfmt/cmd/asmfmt \
+    && go get github.com/kisielk/errcheck \
+    && go get github.com/davidrjenni/reftools/cmd/fillstruct \
+    && go get github.com/nsf/gocode \
+    && go get github.com/rogpeppe/godef \
+    && go get github.com/zmb3/gogetdoc \
+    && go get golang.org/x/tools/cmd/goimports \
+    && go get github.com/golang/lint/golint \
+    && go get github.com/alecthomas/gometalinter \
+    && go get github.com/fatih/gomodifytags \
+    && go get golang.org/x/tools/cmd/gorename \
+    && go get github.com/jstemmer/gotags \
+    && go get golang.org/x/tools/cmd/guru \
+    && go get github.com/josharian/impl \
+    && go get github.com/dominikh/go-tools/cmd/keyify \
+    && go get github.com/fatih/motion \
+    && go get -u github.com/golang/dep/cmd/dep \
+    && go get -u github.com/cweill/gotests/...
+
 # 安装vim
-    && cd /usr/local/src \
+COPY .vimrc /root/
+
+RUN cd /usr/local/src \
     && git clone https://github.com/vim/vim.git \
     && cd vim \
+    && git checkout v8.0.1300 \
     && ./configure --prefix=/usr \
         --with-features=huge \
         --enable-multibyte \
@@ -110,66 +99,34 @@ RUN yum update -y \
     && make install \
     && cd .. \
     && rm -rf vim/ \
-# 安装nvim
-    # && yum install -y python-pip \
-    # && pip install --upgrade pip \
-    # && pip2 install --upgrade neovim \
-    # && cd /usr/local/src \
-    # && curl -O https://bootstrap.pypa.io/get-pip.py \
-    # && python3.4 get-pip.py \
-    # && rm -f get-pip.py \
-    # && pip3 install --upgrade neovim \
-    # && git clone https://github.com/neovim/neovim.git \
-    # && cd neovim \
-    # && git checkout v0.2.0 \
-    # && make CMAKE_BUILD_TYPE=Release \
-    # && make install \
-    # && cd .. \
-    # && rm -rf neovim \
 # 安装powerline字体
     && git clone https://github.com/powerline/fonts.git \
     && cd fonts \
     && ./install.sh \
     && cd .. \
     && rm -rf fonts/ \
+# 安装rtags
+    && wget https://andersbakken.github.io/rtags-releases/rtags-2.16.tar.gz \
+    && tar zxvf rtags-2.16.tar.gz \
+    && cd rtags-2.16 \
+    && cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=1 . \
+    && make \
+    && make install \
+    && cd .. \
+    && rm -rf rtags-2.16/ \
+    && rm -rf rtags-2.16.tar.gz \
 # 安装vim初次启动需要的插件
-    && curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
-        https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim \
     && git clone https://github.com/tomasr/molokai.git ~/.vim/bundle/molokai \
     && git clone https://github.com/Shougo/unite.vim.git ~/.vim/bundle/unite.vim \
     && git clone https://github.com/shougo/vimfiler.vim.git ~/.vim/bundle/vimfiler.vim \
-# 安装nvim初次启动需要的插件
-    # && curl -fLo ~/.config/nvim/autoload/plug.vim --create-dirs \
-    #     https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim \
-    # && git clone https://github.com/tomasr/molokai.git ~/.config/nvim/bundle/molokai \
-    # && git clone https://github.com/Shougo/unite.vim.git ~/.config/nvim/bundle/unite.vim \
-    # && git clone https://github.com/shougo/vimfiler.vim.git ~/.config/nvim/bundle/vimfiler.vim \
-# 下载安装我自己的工作环境配置
-    && git clone https://github.com/wuzangsama/vim_ide.git \
-    && cd ./vim_ide \
-    # vim
-    && cp -f .vimrc ~/ \
-    # nvim
-    # && cp -f .vimrc ~/.config/nvim/init.vim \
-    && cp -f .zshrc ~/ \
-    && cp -f .tmux.conf ~/ \
-    && cp -f robbyrussell.zsh-theme ~/.oh-my-zsh/themes/ \
 # vim其他插件安装
-    # vim
-    && vim +PlugInstall +qall \
-    && cd ~/.vim/bundle/ultisnips/ \
-    # nvim
-    # && nvim +PlugInstall +UpdateRemotePlugins +qall \
-    # && cd ~/.config/nvim/bundle/ultisnips/ \
-    && mkdir mysnippets \
-    # vim
-    && cp -rf /usr/local/src/vim_ide/mysnippets/* ~/.vim/bundle/ultisnips/mysnippets \
-    # nvim
-    # && cp -rf /usr/local/src/vim_ide/mysnippets/* ~/.config/nvim/bundle/ultisnips/mysnippets \
-    && rm -rf /usr/local/src/vim_ide/ \
-# 清理
-    && yum clean all
+    && vim +PlugInstall +qall
+
+COPY .tmux.conf /root/
+COPY .zshrc /root/
 
 #work dir
 WORKDIR /work
 
+#cmd
+CMD zsh
