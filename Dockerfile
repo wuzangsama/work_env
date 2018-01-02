@@ -1,4 +1,4 @@
-FROM centos:7.4
+FROM centos:7
 
 MAINTAINER Haifeng Zhang "zhanghf@zailingtech.com"
 
