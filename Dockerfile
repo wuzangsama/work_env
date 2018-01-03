@@ -107,7 +107,7 @@ RUN cd /usr/local/src \
     && ./install.sh \
     && cd .. \
     && rm -rf fonts/ \
-# 安装rtags
+# 安装rtags用于C++跳转
     && wget https://andersbakken.github.io/rtags-releases/rtags-2.16.tar.gz \
     && tar zxvf rtags-2.16.tar.gz \
     && cd rtags-2.16 \
@@ -117,6 +117,14 @@ RUN cd /usr/local/src \
     && cd .. \
     && rm -rf rtags-2.16/ \
     && rm -rf rtags-2.16.tar.gz \
+# 安装bear用于通过Makefile生成JSON compilation database
+    && git clone https://github.com/rizsotto/Bear.git \
+    && cd Bear \
+    && cmake . \
+    && make all \
+    && make install \
+    && cd .. \
+    && rm -rf Bear \
 # 安装vim初次启动需要的插件
     && git clone https://github.com/tomasr/molokai.git ~/.vim/bundle/molokai \
     && git clone https://github.com/Shougo/unite.vim.git ~/.vim/bundle/unite.vim \
