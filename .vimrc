@@ -677,8 +677,13 @@ if filereadable(expand("~/.vim/bundle/YouCompleteMe/plugin/youcompleteme.vim"))
     execute LoadYcm()
 endif
 
-execute LoadNeoComplete()
-execute LoadVimClang()
+if filereadable(expand("~/.vim/bundle/neocomplete.vim/plugin/neocomplete.vim"))
+    execute LoadNeoComplete()
+endif
+
+if filereadable(expand("~/.vim/bundle/vim-clang/plugin/clang.vim"))
+    execute LoadVimClang()
+endif
 
 if filereadable(expand("~/.vim/bundle/rainbow/plugin/rainbow.vim"))
     execute LoadRainbow()

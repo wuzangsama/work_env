@@ -26,6 +26,8 @@ RUN yum update -y \
 # 安装vim需要的工具包
     && yum install -y cmake \
     && yum install -y clang \
+    && yum install -y clang-devel.x86_64 \
+    && yum install -y llvm-devel.x86_64 \
     && yum install -y openssl \
     && yum install -y cscope \
     && yum install -y python \
