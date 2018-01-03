@@ -536,7 +536,7 @@ function! LoadAle()
     let g:ale_set_quickfix=1
     let g:ale_lint_on_text_changed='never'
 
-    let g:ale_linters = {'go':['gometalinter','gofmt'], 'cpp':['clangcheck','clangtidy']}
+    let g:ale_linters = {'go':['gometalinter','gofmt'], 'cpp':['clangcheck','clangtidy'], 'c':['clangtidy']}
 
     let g:ale_cpp_clang_options='-std=c++11 -Wall'
 endfunction

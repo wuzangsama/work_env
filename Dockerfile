@@ -120,6 +120,7 @@ RUN cd /usr/local/src \
 # 安装bear用于通过Makefile生成JSON compilation database
     && git clone https://github.com/rizsotto/Bear.git \
     && cd Bear \
+    && git checkout 2.2.1 \
     && cmake . \
     && make all \
     && make install \
