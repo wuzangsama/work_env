@@ -366,6 +366,7 @@ Plug 'airblade/vim-gitgutter'
 Plug 'junegunn/gv.vim'
 Plug 'junegunn/vim-slash'
 Plug 'junegunn/vim-peekaboo'
+Plug 'nvie/vim-togglemouse'
 
 " 写作
 Plug 'junegunn/goyo.vim'
@@ -463,7 +464,7 @@ function! LoadDoxygen()
 endfunction
 
 " GoLang
-Plug 'fatih/vim-go'
+Plug 'fatih/vim-go', { 'tag': 'v1.16' }
 function! LoadVimGo()
     let g:go_fmt_command = "goimports"
     let g:go_autodetect_gopath = 1
@@ -484,30 +485,30 @@ function! LoadVimGo()
         autocmd!
 
         " :GoBuild and :GoTestCompile
-        autocmd FileType go nnoremap <localleader>b :<C-u>call <SID>build_go_files()<CR>
+        autocmd FileType go nmap <silent> <localleader>b :<C-u>call <SID>build_go_files()<CR>
 
         " :GoTest
-        autocmd FileType go nnoremap <localleader>t  <Plug>(go-test)
+        autocmd FileType go nmap <silent> <localleader>t  <Plug>(go-test)
 
         " :GoRun
-        autocmd FileType go nnoremap <localleader>r  <Plug>(go-run)
+        autocmd FileType go nmap <silent> <localleader>r  <Plug>(go-run)
 
         " :GoDoc
-        autocmd FileType go nnoremap <localleader>d <Plug>(go-doc)
+        autocmd FileType go nmap <silent> <localleader>d <Plug>(go-doc)
 
         " :GoCoverageToggle
-        autocmd FileType go nnoremap <localleader>c <Plug>(go-coverage-toggle)
+        autocmd FileType go nmap <silent> <localleader>c <Plug>(go-coverage-toggle)
 
         " :GoInfo
-        autocmd FileType go nnoremap <localleader>i <Plug>(go-info)
+        autocmd FileType go nmap <silent> <localleader>i <Plug>(go-info)
 
         " :GoMetaLinter
-        autocmd FileType go nnoremap <localleader>l <Plug>(go-metalinter)
+        autocmd FileType go nmap <silent> <localleader>l <Plug>(go-metalinter)
 
         " :GoDef but opens in a vertical split
-        autocmd FileType go nnoremap <localleader>v <Plug>(go-def-vertical)
+        autocmd FileType go nmap <silent> <localleader>v <Plug>(go-def-vertical)
         " :GoDef but opens in a horizontal split
-        autocmd FileType go nnoremap <localleader>s <Plug>(go-def-split)
+        autocmd FileType go nmap <silent> <localleader>s <Plug>(go-def-split)
 
         " :GoAlternate  commands :A, :AV, :AS and :AT
         autocmd Filetype go command! -bang A call go#alternate#Switch(<bang>0, 'edit')
@@ -530,15 +531,18 @@ endfunction
 Plug 'buoto/gotests-vim'
 
 " 语法检测
-Plug 'w0rp/ale',{'for': ['go','cpp','c']}
-function! LoadAle()
-    let g:ale_open_list=1
-    let g:ale_set_quickfix=1
-    let g:ale_lint_on_text_changed='never'
+Plug 'vim-syntastic/syntastic'
+function! LoadSyntastic()
+    let g:syntastic_always_populate_loc_list = 1
+    let g:syntastic_auto_loc_list = 1
+    let g:syntastic_check_on_open = 1
+    let g:syntastic_check_on_wq = 0
+    let g:syntastic_cpp_checkers = ['clang_check']
+    let g:syntastic_c_checkers = ['clang_check']
+    let g:syntastic_clang_check_config_file = '.clang'
 
-    let g:ale_linters = {'go':['gometalinter','gofmt'], 'cpp':['clangcheck','clangtidy'], 'c':['clangtidy']}
-
-    let g:ale_cpp_clang_options='-std=c++11 -Wall'
+    let g:syntastic_go_checkers = ['golint', 'govec', 'gometalinter']
+    let g:syntastic_go_gometalinter_args = ['--disable-all', '--enable=errcheck']
 endfunction
 
 " 自动补全
@@ -706,8 +710,8 @@ if filereadable(expand("~/.vim/bundle/DoxygenToolkit.vim/plugin/DoxygenToolkit.v
     execute LoadDoxygen()
 endif
 
-if filereadable(expand("~/.vim/bundle/ale/plugin/ale.vim"))
-    execute LoadAle()
+if filereadable(expand("~/.vim/bundle/syntastic/plugin/syntastic.vim"))
+    execute LoadSyntastic()
 endif
 
 if filereadable(expand("~/.vim/bundle/YouCompleteMe/plugin/youcompleteme.vim"))
